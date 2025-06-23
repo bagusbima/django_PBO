@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Kendaraan
 from .forms import KendaraanForm
+from django.http import Http404
+from django.contrib import messages
 
 def list_kendaraan(request):
     kendaraan_list = Kendaraan.objects.all()
@@ -23,7 +25,7 @@ def kendaraan_edit(request, id):
         form = KendaraanForm(request.POST, instance=kendaraan)
         if form.is_valid():
             form.save()
-            return redirect('kendaraan_list')
+            return redirect('manaj:list_kendaraan')
     else:
         form = KendaraanForm(instance=kendaraan)
     return render(request, 'manaj/form_kendaraan.html', {'form': form, 'edit': True})
@@ -32,8 +34,21 @@ def kendaraan_delete(request, id):
     kendaraan = get_object_or_404(Kendaraan, id=id)
     if request.method == 'POST':
         kendaraan.delete()
-        return redirect('kendaraan_list')
+        messages.success(request, 'Kendaraan berhasil dihapus.')
+        return redirect('manaj:list_kendaraan')
     return render(request, 'manaj/confirm_delete.html', {'kendaraan': kendaraan})
+
+def tambah_kendaraan(request):
+    form = KendaraanForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Kendaraan berhasil ditambahkan.')
+        return redirect('manaj:list_kendaraan')
+    return render(request, 'manaj/form_kendaraan.html', {
+        'form': form,
+        'title': 'Tambah Kendaraan',
+        'edit': False
+    })
 
 from django.shortcuts import render
 

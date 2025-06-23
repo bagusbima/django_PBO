@@ -2,18 +2,15 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 class Kendaraan(models.Model):
-    # Pilihan jenis kendaraan
     class JenisKendaraan(models.TextChoices):
         MOBIL = 'mobil', _('Mobil')
         MOTOR = 'motor', _('Motor')
 
-    # Pilihan status kendaraan di garasi
     class StatusGarasi(models.TextChoices):
         TERPARKIR = 'terparkir', _('Terparkir')
         KELUAR = 'keluar', _('Keluar')
         PERAWATAN = 'perawatan', _('Dalam Perawatan')
 
-    # Kolom-kolom informasi kendaraan
     nomor_polisi = models.CharField(max_length=15, unique=True)
     merek = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
