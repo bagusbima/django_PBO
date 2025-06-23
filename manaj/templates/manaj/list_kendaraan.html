@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Kendaraan</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 0 2px;
+        }
+        .edit {
+            background-color: #2196F3;
+            color: white;
+        }
+        .delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .add {
+            background-color: #4CAF50;
+            color: white;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Daftar Kendaraan di Garasi</h1>
+
+    
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nomor Polisi</th>
+                <th>Merek</th>
+                <th>Model</th>
+                <th>Jenis</th>
+                <th>Status</th>
+                <th>Masuk</th>
+                <th>Update</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kendaraan in kendaraan_list %}
+            <tr>
+                <td>{{ kendaraan.nomor_polisi }}</td>
+                <td>{{ kendaraan.merek }}</td>
+                <td>{{ kendaraan.model }}</td>
+                <td>{{ kendaraan.get_jenis_display }}</td>
+                <td>{{ kendaraan.get_status_display }}</td>
+                <td>{{ kendaraan.waktu_masuk|date:"d M Y, H:i" }}</td>
+                <td>{{ kendaraan.waktu_update|date:"d M Y, H:i" }}</td>
+                <td>
+                    <a href="{% url 'kendaraan_edit' kendaraan.id %}" class="btn edit">Edit</a>
+                    <a href="{% url 'kendaraan_delete' kendaraan.id %}" class="btn delete" >Hapus</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">Belum ada kendaraan</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

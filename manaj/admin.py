@@ -1,3 +1,5 @@
+# manaj/admin.py
 from django.contrib import admin
+from .models import Kendaraan
 
-# Register your models here.
+admin.site.register(Kendaraan)
