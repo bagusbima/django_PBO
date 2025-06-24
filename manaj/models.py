@@ -32,3 +32,14 @@ class Kendaraan(models.Model):
 
     def _str_(self):
         return f"{self.nomor_polisi} - {self.merek} {self.model}"
+    
+class Pajak(models.Model):
+    kendaraan = models.ForeignKey(Kendaraan, on_delete=models.CASCADE, related_name='pajaks')
+    tanggal_jatuh_tempo = models.DateField()
+    nominal = models.DecimalField(max_digits=12, decimal_places=2)
+
+    class Meta:
+        db_table = 'garasi_pajak'
+
+    def __str__(self):
+        return f"Pajak {self.kendaraan.nomor_polisi} - {self.kendaraan.merek}"

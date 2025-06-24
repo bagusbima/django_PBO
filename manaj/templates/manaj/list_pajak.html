@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Kendaraan</title>
+    <title>Daftar Pajak Kendaraan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -10,7 +10,7 @@
             background: #eef1f6;
         }
         .table thead {
-            background-color: #0d6efd;
+            background-color: #212529;
             color: white;
         }
         .table tbody tr:hover {
@@ -19,9 +19,10 @@
     </style>
 </head>
 <body>
+{% load humanize %}
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
   <div class="container-fluid px-4">
     <a class="navbar-brand fw-bold" href="#">🚗 GarasiApp</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -41,53 +42,53 @@
   </div>
 </nav>
 
+<!-- Konten -->
 <div class="container-fluid p-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold">Daftar Kendaraan</h3>
-        <a href="{% url 'manaj:tambah_kendaraan' %}" class="btn btn-dark">+ Tambah Kendaraan</a>
+        <h3 class="fw-bold">Daftar Pajak Kendaraan</h3>
+        <a href="{% url 'manaj:tambah_pajak' %}" class="btn btn-dark">+ Tambah Pajak</a>
     </div>
 
-    <!-- Form Filter/Search -->
-    <form method="get" class="input-group mb-3">
-        <input type="text" name="q" class="form-control" placeholder="Cari kendaraan..." value="{{ query }}">
-        <button type="submit" class="btn btn-primary">Cari</button>
+    <!-- Form Filter -->
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-4">
+            <select name="urut" class="form-select">
+                <option value="asc" {% if urutan == "asc" %}selected{% endif %}>Tenggat Tercepat</option>
+                <option value="desc" {% if urutan == "desc" %}selected{% endif %}>Tenggat Terlama</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Urutkan</button>
+        </div>
     </form>
 
-    <!-- Tabel Kendaraan -->
+    <!-- Tabel -->
     <div class="table-responsive">
         <table class="table table-bordered align-middle">
             <thead>
                 <tr>
-                    <th>Nomor Polisi</th>
+                    <th>Plat Nomor</th>
                     <th>Merek</th>
-                    <th>Model</th>
-                    <th>Jenis</th>
-                    <th>Status</th>
-                    <th>Masuk</th>
-                    <th>Update</th>
+                    <th>Jatuh Tempo</th>
+                    <th>Nominal</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {% for kendaraan in kendaraan_list %}
+                {% for pajak in pajak_list %}
                 <tr>
-                    <td>{{ kendaraan.nomor_polisi }}</td>
-                    <td>{{ kendaraan.merek }}</td>
-                    <td>{{ kendaraan.model }}</td>
-                    <td>{{ kendaraan.get_jenis_display }}</td>
-                    <td>{{ kendaraan.get_status_display }}</td>
-                    <td>{{ kendaraan.waktu_masuk|date:"d M Y, H:i" }}</td>
-                    <td>{{ kendaraan.waktu_update|date:"d M Y, H:i" }}</td>
+                    <td>{{ pajak.kendaraan.nomor_polisi }}</td>
+                    <td>{{ pajak.kendaraan.merek }}</td>
+                    <td>{{ pajak.tanggal_jatuh_tempo|date:"d M Y" }}</td>
+                    <td>Rp {{ pajak.nominal|intcomma }}</td>
                     <td>
-                        <a href="{% url 'manaj:kendaraan_edit' kendaraan.id %}" class="btn btn-sm btn-info text-white">Edit</a>
-                        <a href="{% url 'manaj:kendaraan_delete' kendaraan.id %}" class="btn btn-sm btn-danger"
-                           onclick="return confirm('Yakin ingin menghapus kendaraan ini?')">Hapus</a>
+                        <a href="{% url 'manaj:edit_pajak' pajak.id %}" class="btn btn-sm btn-info text-white">Edit</a>
+                        <a href="{% url 'manaj:delete_pajak' pajak.id %}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Yakin ingin menghapus pajak ini?')">Hapus</a>
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="8" class="text-center">Belum ada kendaraan</td>
-                </tr>
+                <tr><td colspan="5" class="text-center">Belum ada data pajak</td></tr>
                 {% endfor %}
             </tbody>
         </table>
